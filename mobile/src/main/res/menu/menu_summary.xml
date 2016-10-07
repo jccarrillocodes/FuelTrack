@@ -1,0 +1,29 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.jccarrillo.alcgo.fueltrack.SummaryActivity">
+
+    <item
+        android:title="@string/action_edit_car"
+        android:id="@+id/action_edit_car"
+        app:showAsAction="never"
+        android:orderInCategory="98"/>
+
+    <item
+        android:id="@+id/action_statistics"
+        android:orderInCategory="99"
+        android:title="@string/action_statistics"
+        app:showAsAction="never" />
+
+    <item
+        android:title="@string/action_add_car"
+        android:id="@+id/action_add_car"
+        app:showAsAction="never"
+        android:orderInCategory="100"/>
+
+    <item
+        android:id="@+id/action_settings"
+        android:orderInCategory="101"
+        android:title="@string/action_settings"
+        app:showAsAction="never" />
+</menu>
