@@ -1,9 +1,11 @@
 package com.jccarrillo.alcgo.fueltracker;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -145,15 +147,32 @@ public class SummaryActivity extends AppCompatActivity {
 
         mListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
-            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-                ListViewAnimationHelper<RefuelValue> helper = new ListViewAnimationHelper<RefuelValue>(
-                        mAdapter,
-                        mListView,
-                        mCarInfo.getRefuelValues()
-                );
-                helper.animateRemoval(mListView, view, true);
-                CarInfoRepository.setCarInfo( mCarInfo );
-                Snackbar.make(SummaryActivity.this.mListView, R.string.value_removed , Snackbar.LENGTH_LONG).setAction("Action", null).show();
+            public boolean onItemLongClick(AdapterView<?> parent, final View view, int position, long id) {
+                AlertDialog.Builder builder = new AlertDialog.Builder( SummaryActivity.this );
+
+                builder.setTitle(R.string.remove_value_title);
+                builder.setMessage(R.string.remove_value_msg);
+                builder.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                    }
+                });
+                builder.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        ListViewAnimationHelper<RefuelValue> helper = new ListViewAnimationHelper<RefuelValue>(
+                                mAdapter,
+                                mListView,
+                                mCarInfo.getRefuelValues()
+                        );
+                        helper.animateRemoval(mListView, view, true);
+                        CarInfoRepository.setCarInfo( mCarInfo );
+                        Snackbar.make(SummaryActivity.this.mListView, R.string.value_removed , Snackbar.LENGTH_LONG).setAction("Action", null).show();
+                    }
+                });
+
+                builder.show();
                 return true;
             }
         });

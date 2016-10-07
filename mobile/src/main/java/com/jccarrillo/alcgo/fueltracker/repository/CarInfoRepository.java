@@ -117,7 +117,7 @@ public final class CarInfoRepository {
         f.mkdirs();
 
         if( carInfo.getUid() <= 0 )
-            for( int i = 0; i < 10000; ++i ){
+            for( int i = 1; i < 10000; ++i ){
                 f = new File( getRepositoryPath(), String.valueOf( i ) );
                 if( !f.exists() ){
                     carInfo.setUid( i );
