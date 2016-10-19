@@ -2,6 +2,8 @@ package com.jccarrillo.alcgo.fueltracker;
 
 import android.app.DatePickerDialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 
 import android.os.Build;
@@ -17,10 +19,12 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import com.jccarrillo.alcgo.fueltracker.domain.DrivingType;
 import com.jccarrillo.alcgo.fueltracker.domain.RefuelValue;
 import com.jccarrillo.alcgo.fueltracker.util.DateUtils;
+import com.jccarrillo.alcgo.fueltracker.util.Global;
 import com.jccarrillo.alcgo.fueltracker.util.KeyboardUtils;
 
 import java.util.Calendar;
@@ -41,19 +45,15 @@ public class AddValueActivity extends AppCompatActivity {
     private EditText mEditTextCost;
     private Spinner mSpinner01;
     private RefuelValue mValue;
-    private Button mButtonSave;
-    private Button mButtonAdd;
     private boolean mIsNew = true;
     private int mPosition;
+    private MenuItem mMenuItemAdd;
+    private MenuItem mMenuItemSave;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_value);
-
-
-        android.support.v7.app.ActionBar actionBar = getSupportActionBar();
-        actionBar.setDisplayHomeAsUpEnabled(true);
 
         getBundleArguments();
         initialize();
@@ -75,13 +75,14 @@ public class AddValueActivity extends AppCompatActivity {
     }
 
     private void initialize(){
+        android.support.v7.app.ActionBar actionBar = getSupportActionBar();
+        actionBar.setDisplayHomeAsUpEnabled(true);
+
         mEditTextDate = (EditText) findViewById(R.id.editTextDate);
         mEditTextDistance = (EditText) findViewById(R.id.editTextDistance);
         mEditTextQuantity = (EditText) findViewById(R.id.editTextQuantity);
         mEditTextCost = (EditText) findViewById(R.id.editTextCost);
         mSpinner01 = (Spinner) findViewById(R.id.spinner01);
-        mButtonSave = (Button) findViewById(R.id.buttonSave);
-        mButtonAdd = (Button) findViewById(R.id.buttonAdd);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
             mEditTextDate.setShowSoftInputOnFocus(false);
@@ -89,11 +90,22 @@ public class AddValueActivity extends AppCompatActivity {
         if( mIsNew ) {
             // Mockup
             mValue = new RefuelValue();
-            mValue.setQuantity(10.12);
-            mValue.setCost(100.4);
+            mValue.setQuantity(0.0);
+            mValue.setCost(0.0);
             mValue.setDate(new Date());
-            mValue.setDistance(1000.0);
-            mValue.setDrivingType(DrivingType.MIXED);
+            mValue.setDistance(0.0);
+
+            SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
+            DrivingType drivingType = DrivingType.MIXED;
+            String d = preferences.getString(Global.PREF_DRIVINGTYPE, "1" );
+            if( "0".equals( d ) )
+                drivingType = DrivingType.CITY;
+            else if( "1".equals( d ) )
+                drivingType = DrivingType.MIXED;
+            else if( "2".equals( d ) )
+                drivingType = DrivingType.HIGHWAY;
+
+            mValue.setDrivingType(drivingType);
         }
 
     }
@@ -115,8 +127,7 @@ public class AddValueActivity extends AppCompatActivity {
                 break;
         }
 
-        mButtonAdd.setVisibility( mIsNew ? View.VISIBLE : View.GONE );
-        mButtonSave.setVisibility( !mIsNew ? View.VISIBLE : View.GONE );
+        fixMenu();
     }
 
     private void listeners(){
@@ -125,28 +136,44 @@ public class AddValueActivity extends AppCompatActivity {
         mEditTextQuantity.addTextChangedListener(mOnEditTextChange);
         mEditTextCost.addTextChangedListener(mOnEditTextChange);
         mSpinner01.setOnItemSelectedListener(mOnSpinnerDrivingItemListener);
-        mButtonSave.setOnClickListener(mOnSaveClick);
-        mButtonAdd.setOnClickListener(mOnAddClick);
     }
 
-    private OnClickListener mOnAddClick = new OnClickListener() {
+    private boolean checkValues(){
+        if( mEditTextDistance.getText().length() == 0 ){
+            Toast.makeText( this, R.string.incorrect_distance, Toast.LENGTH_SHORT ).show();
+            mEditTextDistance.requestFocus();
+            return false;
+        }
 
-        @Override
-        public void onClick(View v) {
+        if( mEditTextQuantity.getText().length() == 0 ){
+            Toast.makeText( this, R.string.incorrect_quantity, Toast.LENGTH_SHORT ).show();
+            mEditTextQuantity.requestFocus();
+            return false;
+        }
+
+        if( mEditTextCost.getText().length() == 0 ){
+            Toast.makeText( this, R.string.incorrect_cost, Toast.LENGTH_SHORT ).show();
+            mEditTextCost.requestFocus();
+            return false;
+        }
+        return true;
+    }
+
+    private void onAddClick() {
+        if( checkValues() ) {
             Intent data = new Intent();
-            data.putExtra(BUNDLE_VALUE,mValue);
-            setResult(RESULT_OK, data );
+            data.putExtra(BUNDLE_VALUE, mValue);
+            setResult(RESULT_OK, data);
             finish();
         }
     };
 
-    private OnClickListener mOnSaveClick = new OnClickListener() {
-        @Override
-        public void onClick(View v) {
+    private void onSaveClick() {
+        if( checkValues() ) {
             Intent data = new Intent();
-            data.putExtra(BUNDLE_VALUE, mValue );
-            data.putExtra(BUNDLE_POSITION,mPosition);
-            setResult(RESULT_OK, data );
+            data.putExtra(BUNDLE_VALUE, mValue);
+            data.putExtra(BUNDLE_POSITION, mPosition);
+            setResult(RESULT_OK, data);
             finish();
         }
     };
@@ -228,16 +255,32 @@ public class AddValueActivity extends AppCompatActivity {
     };
 
     public boolean onOptionsItemSelected(MenuItem item){
-        setResult(RESULT_CANCELED);
-        finish();
-        return true;
+        if( item.getItemId() == android.R.id.home ) {
+            setResult(RESULT_CANCELED);
+            finish();
+        } else if( item.getItemId() == R.id.menu_action_add ) {
+            onAddClick();
+        } else if( item.getItemId() == R.id.menu_action_change ){
+            onSaveClick();
+        }
+        return super.onOptionsItemSelected(item);
 
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_add_value, menu);
+        mMenuItemAdd = menu.findItem(R.id.menu_action_add);
+        mMenuItemSave = menu.findItem(R.id.menu_action_change);
+        fixMenu();
         return true;
+    }
+
+    private void fixMenu(){
+        if( mMenuItemAdd != null )
+            mMenuItemAdd.setVisible( mIsNew );
+        if( mMenuItemSave != null )
+            mMenuItemSave.setVisible( !mIsNew );
     }
 }
 

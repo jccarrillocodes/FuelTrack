@@ -14,6 +14,9 @@
     <string name="prompt_quantity">Quantity</string>
     <string name="prompt_distance">Distance</string>
     <string name="prompt_cost">Cost</string>
+    <string name="incorrect_cost">Invalid cost</string>
+    <string name="incorrect_quantity">Invalid quantity</string>
+    <string name="incorrect_distance">Invalid distance</string>
     <string name="action_add_values">Add values</string>
     <string name="action_change_values">Change values</string>
     <string name="drivingtype">Driving road</string>
@@ -31,4 +34,63 @@
     <string name="value_removed">Value removed</string>
     <string name="remove_value_title">Remove value</string>
     <string name="remove_value_msg">Do you want to remove this value?</string>
+    <string name="title_activity_settings">Settings</string>
+    <string name="remove_car_title">Remove car</string>
+    <string name="remove_car_msg">Do you wnat to remove this car?</string>
+    <string name="choose_option">Choose an option</string>
+    <string name="gallery">Gallery</string>
+    <string name="camera">Camera</string>
+    <string name="remove_image">Remove image</string>
+    <string name="total_">Total:</string>
+    <string name="average_">Average:</string>
+
+    <!-- Strings related to Settings -->
+
+    <!-- Example General settings -->
+    <string name="pref_header_general">General</string>
+
+    <string name="pref_title_social_recommendations">Enable social recommendations</string>
+    <string name="pref_description_social_recommendations">Recommendations for people to contact
+        based on your message history
+    </string>
+
+    <string name="pref_title_currency_name">Currency symbol</string>
+    <string name="pref_default_currency_name"> €</string>
+
+    <string name="pref_title_distance_name">Distance symbol</string>
+    <string name="pref_default_distance_name"> km.</string>
+
+    <string name="pref_title_quantity">Quantity symbol</string>
+    <string name="pref_default_quantity"> l.</string>
+
+    <string name="pref_title_preferred_road">Preferred road</string>
+    <string-array name="pref_default_driving_values">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+    </string-array>
+
+    <string name="pref_title_preferred_value">Preferred value in list</string>
+    <string-array name="pref_preferred_value_titles">
+        <item>@string/prompt_quantity</item>
+        <item>@string/prompt_cost</item>
+        <item>@string/prompt_distance</item>
+    </string-array>
+
+    <string-array name="pref_preferred_value_values">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+    </string-array>
+
+    <string name="graphical_evolution">Graphical evolution</string>
+    <string name="min">Min</string>
+    <string name="max">Max</string>
+    <string name="average">Average</string>
+
+    <string name="car_name">Car name</string>
+    <string name="car_brand">Brand name</string>
+    <string name="incorrect_car_name">Invalid car name</string>
+    <string name="incorrect_car_brand">Invalid car brand</string>
+    <string name="title_activity_cars_list">FuelTracker</string>
 </resources>

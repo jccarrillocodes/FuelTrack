@@ -130,4 +130,11 @@ public final class CarInfoRepository {
 
         return writeObject( String.valueOf( carInfo.getUid() ), carInfo );
     }
+
+    public static boolean removeObject(CarInfo mCar) {
+        File f = new File( getRepositoryPath(), String.valueOf( mCar.getUid() ) );
+        if( f.exists() )
+            return f.delete();
+        return false;
+    }
 }

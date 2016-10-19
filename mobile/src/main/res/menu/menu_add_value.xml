@@ -1,10 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:app="http://schemas.android.com/apk/res-auto"
+<menu
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item android:id="@+id/menu_action_change" android:title="@string/action_change_values"
-        android:showAsAction="always" />
+        android:showAsAction="ifRoom"
+        app:showAsAction="ifRoom"
+        android:icon="@drawable/ic_action_write"
+        android:visible="true" />
     <item android:id="@+id/menu_action_add" android:title="@string/action_add_values"
         android:icon="@drawable/ic_action_write"
-        android:showAsAction="always" />
+        android:visible="true"
+        app:showAsAction="ifRoom"
+        android:showAsAction="ifRoom" />
 </menu>

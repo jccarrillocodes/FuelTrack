@@ -11,6 +11,8 @@ import com.jccarrillo.alcgo.fueltracker.R;
 import com.jccarrillo.alcgo.fueltracker.domain.CarInfo;
 import com.jccarrillo.alcgo.fueltracker.domain.RefuelValue;
 import com.jccarrillo.alcgo.fueltracker.util.DateUtils;
+import com.jccarrillo.alcgo.fueltracker.util.FormatUtils;
+import com.jccarrillo.alcgo.fueltracker.util.Global;
 
 import java.text.SimpleDateFormat;
 import java.util.List;
@@ -25,9 +27,17 @@ public class RefuelValueAdapter extends BaseAdapter {
 
     private LayoutInflater mInflater;
     private List<RefuelValue> mValues;
-    private String mCurrency = " €";
-    private String mQuantity = " l.";
-    private boolean mModeQuantity = true;
+    private String mCurrency = Global.DEFAULT_CURRENCY;
+    private String mQuantity = Global.DEFAULT_QUANTITY;
+    private String mDistance = Global.DEFAULT_DISTANCE;
+
+    public enum DISPLAYMODE {
+        CURRENCY,
+        QUANTITY,
+        DISTANCE
+    }
+
+    private DISPLAYMODE mMode = DISPLAYMODE.QUANTITY;
 
 
     private static class RefuelValueAdapterItem {
@@ -40,12 +50,12 @@ public class RefuelValueAdapter extends BaseAdapter {
         mValues = valueList;
     }
 
-    public boolean getModeQuantity(){
-        return mModeQuantity;
+    public DISPLAYMODE getMode(){
+        return mMode;
     }
 
-    public void setModeQuantity( boolean modeQuantity ){
-        mModeQuantity = modeQuantity;
+    public void setMode( DISPLAYMODE mode ){
+        mMode = mode;
     }
 
     public void setValueList( List<RefuelValue> list ){
@@ -87,22 +97,26 @@ public class RefuelValueAdapter extends BaseAdapter {
 
         if( item != null ) {
             viewHolder.textView1.setText( item.getDate() == null ? "" : DateUtils.toString( item.getDate() ) );
-            if( mModeQuantity )
-                viewHolder.textView2.setText( doubleRounded( item.getQuantity(), 2 ) + mQuantity );
-            else
-                viewHolder.textView2.setText( doubleRounded( item.getCost(), 2 ) + mCurrency );
+            if( mMode.equals( DISPLAYMODE.QUANTITY ) )
+                viewHolder.textView2.setText(FormatUtils.doubleRounded( item.getQuantity(), 2 ) + mQuantity );
+            else if( mMode.equals( DISPLAYMODE.CURRENCY ) )
+                    viewHolder.textView2.setText( FormatUtils.doubleRounded( item.getCost(), 2 ) + mCurrency );
+            else if( mMode.equals( DISPLAYMODE.DISTANCE ) )
+                viewHolder.textView2.setText( FormatUtils.doubleRounded( item.getDistance(), 2 ) + mDistance );
         }
         return convertView;
     }
 
-    private String doubleRounded( double value, int decimals ){
-        if( decimals < 0 )
-            decimals = 0;
-
-        value = value * Math.pow( 10, decimals );
-        value = Math.round( value );
-        value = value / Math.pow( 10, decimals );
-
-        return String.valueOf( value );
+    public void setQuantity( String quantity ){
+        this.mQuantity = quantity;
     }
+
+    public void setCurrency( String currency ){
+        mCurrency = currency;
+    }
+
+    public void setDistance( String distance ){
+        mDistance = distance;
+    }
+
 }

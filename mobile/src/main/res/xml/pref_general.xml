@@ -1,0 +1,48 @@
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <EditTextPreference
+        android:capitalize="words"
+        android:defaultValue="@string/pref_default_quantity"
+        android:inputType="textCapWords"
+        android:key="quantity"
+        android:maxLines="1"
+        android:selectAllOnFocus="true"
+        android:singleLine="true"
+        android:title="@string/pref_title_quantity" />
+
+    <EditTextPreference
+        android:capitalize="words"
+        android:defaultValue="@string/pref_default_currency_name"
+        android:inputType="textCapWords"
+        android:key="currency"
+        android:maxLines="1"
+        android:selectAllOnFocus="true"
+        android:title="@string/pref_title_currency_name" />
+
+    <EditTextPreference
+        android:capitalize="words"
+        android:defaultValue="@string/pref_default_distance_name"
+        android:inputType="textCapWords"
+        android:key="distance"
+        android:maxLines="1"
+        android:selectAllOnFocus="true"
+        android:title="@string/pref_title_distance_name" />
+
+    <ListPreference
+        android:defaultValue="1"
+        android:entries="@array/drivingtypes"
+        android:entryValues="@array/pref_default_driving_values"
+        android:key="drivingtype"
+        android:negativeButtonText="@null"
+        android:positiveButtonText="@null"
+        android:title="@string/pref_title_preferred_road" />
+
+    <ListPreference
+        android:defaultValue="0"
+        android:entries="@array/pref_preferred_value_titles"
+        android:entryValues="@array/pref_preferred_value_values"
+        android:key="value_in_list"
+        android:negativeButtonText="@null"
+        android:positiveButtonText="@null"
+        android:title="@string/pref_title_preferred_value" />
+</PreferenceScreen>
